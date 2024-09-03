@@ -1,0 +1,98 @@
+﻿@model IEnumerable<eCourses.Models.Course>
+
+@{
+    ViewData["Title"] = "Courses by Instructor";
+    string instructorName = ViewData["InstructorName"] as string;
+}
+
+<style>
+    .instructor-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .instructor-header img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .instructor-header h2 {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+    body {
+        background-image: url('https://img.freepik.com/premium-vector/online-education-laptop-application-with-book-electronic-library-online-training-courses-digital-library-graduation-concept-web-graphic-design-landing-page-template-3d-vector-illustration_473922-202.jpg?w=1480');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .table {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .table th, .table td {
+            vertical-align: middle;
+            color: #0000FF; 
+        }
+
+        .table img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+    .btn-primary, .btn-info, .btn-danger {
+        margin-right: 5px;
+        border-radius: 20px;
+        padding: 5px 15px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="instructor-header">
+     <h2 style="color: darkblue;">Courses by @instructorName</h2>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Language</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+            <tr>
+                <td><img src="@course.Image" alt="@course.Title" /></td>
+                <td>@course.Title</td>
+                <td>@course.Description</td>
+                <td>@course.Language</td>
+                <td>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-primary">Edit</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@course.Id" class="btn btn-info">Details</a>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                  {
+                    <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-danger">Delete</a>
+                  }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

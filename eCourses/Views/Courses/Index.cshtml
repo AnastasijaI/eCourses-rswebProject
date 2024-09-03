@@ -1,0 +1,153 @@
+﻿@model IEnumerable<eCourses.Models.Course>
+
+@{
+    ViewData["Title"] = "List of Courses";
+}
+<style>
+    .custom-btn {
+        background-color: darkblue;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+    }
+
+        .custom-btn:hover {
+            background-color: navy;
+            color: white;
+        }
+
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        background-color: #ffffff;
+        max-width: 350px; 
+        margin: auto; 
+    }
+
+    .card-header {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+        cursor: pointer; 
+    }
+
+    .card-footer {
+        background-color: #343a40;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between; 
+        align-items: center;
+    }
+
+    .btn-outline-info {
+        border-color: #17a2b8;
+        color: #17a2b8;
+    }
+
+        .btn-outline-info:hover {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+    .btn-outline-primary {
+        border-color: #0d6efd;
+        color: #0d6efd;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+    .text-white {
+        color: white !important;
+    }
+
+    body {
+        background-image: url('https://cdn2.vectorstock.com/i/1000x1000/65/16/digital-coding-background-with-numbers-zero-vector-36266516.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .container {
+        padding: 20px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-4">
+                <form class="d-flex" asp-action="Index" asp-controller="Courses">
+                    <input name="searchString1" class="form-control me-1" type="search" placeholder="Search by Title" aria-label="Search" />
+                    <button class="btn btn-dark" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form class="d-flex" asp-action="Index" asp-controller="Courses">
+                    <input name="searchString2" class="form-control me-1" type="search" placeholder="Search by Instructor" aria-label="Search" />
+                    <button class="btn btn-dark" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form class="d-flex" asp-action="Index" asp-controller="Courses">
+                    <input name="searchString3" class="form-control me-1" type="search" placeholder="Search by Language" aria-label="Search" />
+                    <button class="btn btn-dark" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 col-xs-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                @item.Title <br /> - @Html.DisplayFor(modelItem => item.Instructor.FullName)
+                            </h5>
+                        </div>
+                        <a href="@Url.Action("Details", "Courses", new { id = item.Id })">
+                            <img src="@item.Image" class="card-img-top" alt="@item.Title">
+                        </a>
+                        <div class="card-footer">
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>Edit</a>
+                            }
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form asp-controller="UserCourses" asp-action="Buy" method="post" style="display:inline;">
+                                    <input type="hidden" name="courseId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-outline-primary">Buy</button>
+                                </form>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+        <div style="position: fixed; right:100px; bottom: 100px;" class="text-white">
+            <a asp-controller="Courses" asp-action="Create" class="btn custom-btn">Add New</a>
+        </div>
+        }
+    </div>
+</body>

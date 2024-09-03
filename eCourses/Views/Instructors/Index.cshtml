@@ -1,0 +1,110 @@
+﻿@model IEnumerable<eCourses.Models.Instructor>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p class="text-center">
+        <a class="btn custom-btn" asp-action="Create">Create New</a>
+    </p>
+}
+
+<style>
+    .form-control.rounded-pill {
+        border-radius: 50px;
+        padding: 10px 15px;
+    }
+
+    .btn.rounded-pill {
+        border-radius: 50px;
+    }
+
+    .form-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-group {
+        flex: 1;
+    }
+
+    .custom-btn {
+        background-color: darkblue;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+    }
+
+        .custom-btn:hover {
+            background-color: navy;
+            color: white;
+        }
+</style>
+
+<body style="background-image: url('https://th.bing.com/th/id/OIP.gtq4p8cd-IInzi3W_aberQHaFj?rs=1&pid=ImgDetMain');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    font-family: 'Roboto', sans-serif;">
+
+    <form asp-action="Index" method="get" class="text-center mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control rounded-pill" placeholder="Search by Name">
+            </div>
+            <div class="form-group col-md-4">
+                <input type="text" name="searchNationality" value="@ViewData["CurrentFilterNationality"]" class="form-control rounded-pill" placeholder="Search by Nationality">
+            </div>
+            <div class="form-group col-md-4">
+                <button type="submit" class="btn btn-primary rounded-pill">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="container">
+        <table class="table table-bordered table-striped text-center bg-white">
+            <thead class="table-primary">
+                <tr>
+                    <th>Image</th>
+                    <th>Full Name</th>
+                    <th>Birth Date</th>
+                    <th>Nationality</th>
+                    <th>Gender</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="@Url.Content(item.ImageUrl)" alt="@item.FullName" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                        </td>
+                        <td>
+                            <a asp-controller="Courses" asp-action="CoursesByInstructors" asp-route-instructorId="@item.Id">@item.FullName</a>
+                        </td>
+                        <td>@item.BirthDate?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Nationality</td>
+                        <td>@item.Gender</td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            }
+                            <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>

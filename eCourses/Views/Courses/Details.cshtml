@@ -1,0 +1,168 @@
+﻿@model eCourses.Models.Course
+
+@{
+    ViewData["Title"] = "Course Details";
+    var hasUserBoughtCourse = (bool?)ViewData["HasUserBoughtCourse"] ?? false;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://th.bing.com/th/id/R.086aa87c945661f46cd64c5ddf5c2bfa?rik=L1S%2fac5skJStOg&pid=ImgRaw&r=0');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+            margin-bottom: 50px;
+        }
+
+        .card-img-top {
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .review {
+            margin-bottom: 10px;
+        }
+
+        .review-title {
+            font-weight: bold;
+        }
+
+        .review-body {
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+
+        .card-header {
+            background-color: whitesmoke;
+            color: darkblue;
+            text-align: center;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        .card-footer {
+            background-color: whitesmoke;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">@Model.Title</h4>
+                    </div>
+                    <img src="@Model.Image" class="card-img-top" alt="@Model.Title">
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-3">Title:</dt>
+                            <dd class="col-sm-9">@Model.Title</dd>
+                            <dt class="col-sm-3">Date Created:</dt>
+                            <dd class="col-sm-9">@Model.DateCreated.ToShortDateString()</dd>
+                            <dt class="col-sm-3">Description:</dt>
+                            <dd class="col-sm-9">@Model.Description</dd>
+                            <dt class="col-sm-3">Instructor:</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.InstructorId != null)
+                                {
+                                    <a asp-controller="Instructors" asp-action="Details" asp-route-id="@Model.InstructorId">@Model.Instructor.FullName</a>
+                                }
+                            </dd>
+                           @if (User.Identity.IsAuthenticated && hasUserBoughtCourse)
+                            {
+                                <dt class="col-sm-3">Video:</dt>
+                                @if (!string.IsNullOrEmpty(Model.VideoUrl))
+                                {
+                                    <div class="form-group">
+                                        @*  <video width="320" height="240" controls>
+                                        <source src="@Model.VideoUrl" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                <br>*@
+                                        <a href="@Model.VideoUrl" download class="btn btn-info mt-2">Download Video</a>
+                                    </div>
+                                }
+                            }
+                            <dt class="col-sm-3">Price:</dt>
+                            <dd class="col-sm-9">@Model.Price</dd>
+                            <dt class="col-sm-3">Language:</dt>
+                            <dd class="col-sm-9">@Model.Language</dd>
+                            <dt class="col-sm-3">Rating:</dt>
+                            <dd class="col-sm-9">
+                                @{
+                                    int likeSum = 0;
+                                    int likeCount = 0;
+                                    var averageLikes = "/";
+                                    foreach (var review in Model.Reviews)
+                                    {
+                                        likeSum += review.Likes.GetValueOrDefault();
+                                        likeCount++;
+                                    }
+                                    if (likeCount > 0)
+                                    {
+                                        averageLikes = (likeSum / likeCount).ToString();
+                                    }
+                                }
+                                @averageLikes
+                            </dd>
+                        </dl>
+                        <div>
+                            <h3 class="text-primary">Reviews</h3>
+                            @if (Model.Reviews != null && Model.Reviews.Any())
+                            {
+                                <ul class="list-unstyled">
+                                    @foreach (var review in Model.Reviews)
+                                    {
+                                        <li class="review">
+                                            <strong>@review.AppUser:</strong> @review.Comment
+                                            @if (User.Identity.IsAuthenticated && (review.AppUser == User.Identity.Name || User.IsInRole("Admin")))
+                                            {
+                                                <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-warning btn-sm ml-2">Edit</a>
+                                                <a asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" class="btn btn-danger btn-sm ml-2">Delete</a>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p>No reviews yet.</p>
+                            }
+                        </div>
+                        @if (hasUserBoughtCourse && User.Identity.IsAuthenticated)
+                        {
+                            <div class="mt-3">
+                                <a asp-controller="Reviews" asp-action="Create" asp-route-courseId="@Model.Id" class="btn btn-success">Add Review</a>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                        }
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

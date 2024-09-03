@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 50px;
+            margin-bottom: 70px;
+        }
+
+        .welcome-message {
+            margin-top: 50px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: right; 
+        }
+
+            .welcome-message img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .btn-custom {
+            background-color: darkblue; 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            padding: 10px 20px; 
+            text-decoration: none; 
+            font-size: 16px; 
+            display: inline-block; 
+        }
+
+            .btn-custom:hover {
+                background-color: navy; 
+                color: white; 
+            }
+    </style>
+</head>
+<body style="background-image: url('https://cdn2.vectorstock.com/i/1000x1000/65/16/digital-coding-background-with-numbers-zero-vector-36266516.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: 'Roboto', sans-serif;">
+    <div class="container">
+        <div class="row justify-content-end">
+            <div class="col-md-6">
+                <div class="welcome-message">
+                    <h1 class="display-4">Welcome to Our Online Courses Platform</h1>
+                    <p>Explore a wide range of programming courses designed to help you advance your skills and achieve your career goals. Dive into our comprehensive courses on various programming languages and technologies!</p>
+                    <a href="/Courses/Index" class="btn btn-custom">Explore Courses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

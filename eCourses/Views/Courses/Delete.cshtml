@@ -1,0 +1,72 @@
+﻿@model eCourses.Models.Course
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<body style="background-image: url('https://th.bing.com/th/id/R.f5771a85739c27900e6b85d862f378be?rik=wPXeVu6wtZ8GFg&pid=ImgRaw&r=0'); background-size: cover; background-attachment: fixed;">
+    <h1 class="text-center" style="color:white;">Delete</h1>
+
+    <div class="container" style="background-color: darkred; color: white; font-family: Arial, sans-serif; padding: 20px; border-radius: 5px; max-width: 600px; margin: 0 auto;">
+        <div class="text-center">
+            <img src="@Model.Image" class="img-fluid" style="display: block; margin-left: auto; margin-right: auto; max-width: 100%; height: auto; border-radius: 5px;" />
+        </div>
+        <h3 class="text-center mt-3">Are you sure you want to delete this?</h3>
+        <div class="card-body mt-4">
+            <h4 class="card-title">Course</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.DateCreated)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.DateCreated)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Instructor)
+                </dt>
+                <dd class="col-sm-9">
+                    @if (Model.InstructorId != null)
+                    {
+                        <a asp-controller="Directors" asp-action="Details" asp-route-id="@Model.InstructorId" style="color: lightblue;">@Html.DisplayFor(model => model.Instructor.FullName)</a>
+                    }
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.VideoUrl)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.VideoUrl)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Price)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Price)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Language)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Language)
+                </dd>
+            </dl>
+
+            <form asp-action="Delete" class="text-center">
+                <input type="hidden" asp-for="Id" />
+                <a asp-action="Index" class="btn btn-light btn-lg" style="background-color: grey; color: white;">Back to List</a> |
+                <input type="submit" value="Delete" class="btn btn-light btn-lg" style="background-color: red; color: white;" />
+            </form>
+        </div>
+    </div>
+</body>
